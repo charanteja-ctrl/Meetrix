@@ -17,14 +17,15 @@ interface AuthContextType {
 const DEFAULT_USER: UserProfile = {
   id: 'usr-9921',
   name: 'Alex Rivera',
-  email: 'alex.rivera@eventsphere.io',
+  email: 'alex.rivera@vitap.ac.in',
   avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-  role: 'Organizer',
-  bio: 'Lead Event Architect & Staff Systems Engineer.',
-  company: 'EventSphere Core',
-  title: 'Senior Event Producer',
+  role: 'Club Lead & Organizer',
+  bio: 'GDSC & ACM Club Lead @ VIT-AP University.',
+  registrationNumber: '23BCE1092',
+  school: 'SCOPE (Computer Science)',
+  hostelBlock: 'MH-2 Block',
   xp: 2450,
-  badges: ['VIP Founder', 'Event Pro', 'Early Adopter', 'Verified Host'],
+  badges: ['Vitopia Convener', 'VTAPP Lead', 'Early Adopter', 'Verified Host'],
   mfaEnabled: true,
   walletBalance: 1450.00
 };
@@ -38,15 +39,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [groqApiKey, setGroqApiKey] = useState<string>(() => {
-    return localStorage.getItem('eventsphere_groq_key') || '';
+    return localStorage.getItem('eventsphere_groq_key') || import.meta.env.VITE_GROQ_API_KEY || '';
   });
 
   const [supabaseUrl, setSupabaseUrl] = useState<string>(() => {
-    return localStorage.getItem('eventsphere_sb_url') || '';
+    return localStorage.getItem('eventsphere_sb_url') || import.meta.env.VITE_SUPABASE_URL || '';
   });
 
   const [supabaseAnonKey, setSupabaseAnonKey] = useState<string>(() => {
-    return localStorage.getItem('eventsphere_sb_key') || '';
+    return localStorage.getItem('eventsphere_sb_key') || import.meta.env.VITE_SUPABASE_ANON_KEY || '';
   });
 
   useEffect(() => {

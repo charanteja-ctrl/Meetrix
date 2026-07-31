@@ -1,10 +1,10 @@
 export type UserRole = 
   | 'Guest'
-  | 'Attendee'
-  | 'Organizer'
+  | 'Student Attendee'
+  | 'Club Lead & Organizer'
   | 'Volunteer'
-  | 'Vendor'
-  | 'Sponsor'
+  | 'Faculty Coordinator'
+  | 'Sponsor & Vendor'
   | 'Admin'
   | 'Super Admin';
 
@@ -15,8 +15,9 @@ export interface UserProfile {
   avatar: string;
   role: UserRole;
   bio?: string;
-  company?: string;
-  title?: string;
+  registrationNumber?: string; // VIT-AP Reg No e.g. 23BCE1092
+  school?: string; // SCOPE, SENSE, SAS, VSB, VIT-AP Law
+  hostelBlock?: string; // MH-1, MH-2, LH-1, Day Scholar
   xp: number;
   badges: string[];
   mfaEnabled: boolean;
@@ -24,17 +25,15 @@ export interface UserProfile {
 }
 
 export type EventCategory = 
-  | 'Tech Conferences'
-  | 'Hackathons'
-  | 'Concerts'
-  | 'Festivals'
-  | 'Sports'
-  | 'Networking'
-  | 'Workshops'
-  | 'Design'
-  | 'AI & Web3';
+  | 'Flagship Fests (Vitopia & VTAPP)'
+  | 'Technical & Hackathons'
+  | 'Cultural & Pro-Nights'
+  | 'Conferences & EDPs'
+  | 'Clubs & Societies'
+  | 'Sports & Esports'
+  | 'Workshops & FDPs';
 
-export type EventFormat = 'Physical' | 'Virtual' | 'Hybrid';
+export type EventFormat = 'Physical (On-Campus)' | 'Virtual' | 'Hybrid';
 
 export interface Speaker {
   id: string;
@@ -50,7 +49,7 @@ export interface Sponsor {
   id: string;
   name: string;
   logo: string;
-  tier: 'Platinum' | 'Gold' | 'Silver' | 'Community';
+  tier: 'Title Sponsor' | 'Platinum' | 'Gold' | 'Silver' | 'Community Partner';
   website: string;
 }
 
@@ -66,8 +65,8 @@ export interface Session {
 
 export interface TicketTier {
   id: string;
-  name: 'Free' | 'Early Bird' | 'Standard' | 'VIP' | 'Group Pass';
-  price: number;
+  name: 'Free Student Pass' | 'Early Bird' | 'Standard' | 'VIP Pro-Night Pass' | 'Group Hacker Pass';
+  price: number; // In INR (₹)
   perks: string[];
   capacity: number;
   available: number;
@@ -94,9 +93,9 @@ export interface EventItem {
   time: string;
   timezone: string;
   location: {
-    venueName: string;
+    venueName: string; // e.g. APJ Abdul Kalam Auditorium (AB1), Multipurpose Hall (MPH), Open Air Theatre (OAT)
     address: string;
-    city: string;
+    city: string; // Amaravati / Vijayawada
     country: string;
     lat: number;
     lng: number;
@@ -105,7 +104,7 @@ export interface EventItem {
   banner: string;
   thumbnail: string;
   organizer: {
-    name: string;
+    name: string; // e.g. GDSC VIT-AP, ACM Student Chapter, Vitopia Council
     logo: string;
     verified: boolean;
   };
@@ -120,7 +119,7 @@ export interface EventItem {
   liveViewersCount: number;
   isFeatured?: boolean;
   isTrending?: boolean;
-  priceFrom: number;
+  priceFrom: number; // In INR (₹)
 }
 
 export interface TicketBooking {

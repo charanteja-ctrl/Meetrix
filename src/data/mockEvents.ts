@@ -2,170 +2,162 @@ import type { EventItem, Seat } from '../types/event';
 
 export const MOCK_EVENTS: EventItem[] = [
   {
-    id: 'evt-1',
-    slug: 'global-tech-summit-2026',
-    title: 'Global Tech & AI Summit 2026',
-    description: 'The world\'s flagship developer conference uniting 5,000+ AI pioneers, system architects, and tech leaders for 3 days of transformative keynotes, interactive seat workshops, and exclusive networking.',
-    category: 'AI & Web3',
-    tags: ['AI', 'LLMs', 'System Architecture', 'Cloud Native'],
-    format: 'Hybrid',
-    date: '2026-09-15',
-    time: '09:00 AM - 06:00 PM',
-    timezone: 'PST (UTC-8)',
+    id: 'evt-vitopia-2026',
+    slug: 'vitopia-2026-international-fest',
+    title: 'Vitopia 2026 — International Cultural & Sports Fest',
+    description: 'VIT-AP University\'s premier annual mega festival! Featuring celebrity pro-nights, international cultural showcases, battle of the bands, fashion pageants, dance face-offs, and inter-collegiate sports tournaments.',
+    category: 'Flagship Fests (Vitopia & VTAPP)',
+    tags: ['Vitopia', 'Pro-Night', 'Celebrity Artist', 'Cultural Fest', 'Sports'],
+    format: 'Physical (On-Campus)',
+    date: '2026-09-24',
+    time: '04:00 PM - 11:00 PM',
+    timezone: 'IST (UTC+5:30)',
     location: {
-      venueName: 'Palace of Fine Arts & Tech Dome',
-      address: '3301 Lyon St, San Francisco',
-      city: 'San Francisco',
-      country: 'USA',
-      lat: 37.8024,
-      lng: -122.4487,
-      virtualLink: 'https://live.eventsphere.io/summit-2026'
+      venueName: 'Open Air Theatre (OAT) & Central Sports Complex',
+      address: 'Near Central Green Grounds, VIT-AP University',
+      city: 'Amaravati / Vijayawada',
+      country: 'India',
+      lat: 16.4971,
+      lng: 80.4992,
+      virtualLink: 'https://vitopia.vitap.ac.in'
     },
-    banner: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=80',
-    thumbnail: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80',
+    banner: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80',
     organizer: {
-      name: 'EventSphere Labs & Linear',
+      name: 'VIT-AP Student Welfare Office & Vitopia Council',
       logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80',
       verified: true
     },
     ticketTiers: [
-      { id: 'tier-1', name: 'Free', price: 0, perks: ['Keynote Access', 'Virtual Stream'], capacity: 1000, available: 142 },
-      { id: 'tier-2', name: 'Standard', price: 299, perks: ['Full Mainstage Access', 'Swag Box', 'Lunch & Drinks'], capacity: 500, available: 89 },
-      { id: 'tier-3', name: 'VIP', price: 799, perks: ['VIP Lounge & Dinner', 'Front-Row Reserved Seat', '1-on-1 Speaker Meet'], capacity: 100, available: 12 }
+      { id: 'tier-vit-1', name: 'Free Student Pass', price: 0, perks: ['Day Time Cultural Access', 'OAT Entry Pass'], capacity: 4000, available: 412 },
+      { id: 'tier-vit-2', name: 'Standard', price: 299, perks: ['Pro-Night Arena Entry', 'Vitopia Official Swag Bag', 'Food Court Coupon'], capacity: 2000, available: 180 },
+      { id: 'tier-vit-3', name: 'VIP Pro-Night Pass', price: 799, perks: ['Front Stage Reserved Pit', 'Celebrity Meet & Greet', 'VIP Lounge Access'], capacity: 250, available: 18 }
     ],
     speakers: [
       {
-        id: 'spk-1',
-        name: 'Elena Rostova',
-        role: 'Chief AI Architect',
-        company: 'Neural Dynamics',
+        id: 'spk-vit-1',
+        name: 'Dr. S. V. Kota Reddy',
+        role: 'Hon\'ble Vice Chancellor',
+        company: 'VIT-AP University',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-        bio: 'Leading breakthroughs in autonomous agent architectures and large scale multi-agent reasoning systems.',
-        topics: ['Agentic AI', 'Scalable LLMs']
-      },
-      {
-        id: 'spk-2',
-        name: 'Marcus Vance',
-        role: 'VP of Infrastructure',
-        company: 'Vercel / Stripe',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-        bio: 'Pioneered sub-millisecond edge routing systems and global real-time event streaming pipelines.',
-        topics: ['Edge Computing', 'High Concurrency']
+        bio: 'Inaugurating Vitopia 2026 and celebrating international student talent across 50+ universities.',
+        topics: ['University Excellence', 'Global Youth Leadership']
       }
     ],
     sponsors: [
-      { id: 'sp-1', name: 'Stripe', logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80', tier: 'Platinum', website: 'https://stripe.com' },
-      { id: 'sp-2', name: 'Supabase', logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80', tier: 'Gold', website: 'https://supabase.com' }
+      { id: 'sp-vit-1', name: 'Stripe & Supabase', logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80', tier: 'Title Sponsor', website: 'https://vitap.ac.in' },
+      { id: 'sp-vit-2', name: 'Red Bull India', logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80', tier: 'Platinum', website: 'https://redbull.com' }
     ],
     agenda: [
-      { id: 'ses-1', title: 'Keynote: The Next Decade of AI Orchestration', description: 'Deep dive into autonomous reasoning loops and agentic workflow patterns.', startTime: '09:30 AM', endTime: '11:00 AM', stage: 'Grand Arena', speakerId: 'spk-1' },
-      { id: 'ses-2', title: 'Building Sub-50ms Global Event Platforms', description: 'How to scale distributed real-time engines with Supabase & edge functions.', startTime: '11:30 AM', endTime: '01:00 PM', stage: 'Stage B (Tech)', speakerId: 'spk-2' }
+      { id: 'ses-vit-1', title: 'Grand Inauguration & Cultural Pageant', description: 'Opening dance acts and band performances by VIT-AP Music & Dance Clubs.', startTime: '04:30 PM', endTime: '06:30 PM', stage: 'OAT Mainstage', speakerId: 'spk-vit-1' },
+      { id: 'ses-vit-2', title: 'Celebrity EDM & Bollywood Pro-Night', description: 'Headline performance by top international DJ & Bollywood musical star.', startTime: '07:30 PM', endTime: '10:30 PM', stage: 'OAT Mainstage', speakerId: 'spk-vit-1' }
     ],
-    rating: 4.9,
-    reviewCount: 328,
-    seatsLeft: 42,
-    totalCapacity: 2000,
-    liveViewersCount: 1420,
+    rating: 4.95,
+    reviewCount: 1420,
+    seatsLeft: 412,
+    totalCapacity: 6000,
+    liveViewersCount: 3840,
     isFeatured: true,
     isTrending: true,
     priceFrom: 0
   },
   {
-    id: 'evt-2',
-    slug: 'neo-design-and-ux-con-2026',
-    title: 'Neo Design & Micro-Interactions Expo',
-    description: 'Immerse yourself in modern UI engineering, glassmorphism, neo-brutalism, fluid layout physics, and state-of-the-art interactive component design.',
-    category: 'Design',
-    tags: ['UI/UX', 'Figma', 'Framer Motion', 'Tailwind'],
-    format: 'Physical',
-    date: '2026-10-04',
-    time: '10:00 AM - 05:00 PM',
-    timezone: 'EST (UTC-5)',
+    id: 'evt-vtapp-2026',
+    slug: 'vtapp-2026-national-tech-fest',
+    title: 'VTAPP 2026 — Annual National Tech Fest',
+    description: 'The premier national technical festival organized across SCOPE, SENSE, SAS & VSB schools. Featuring 48h hackathons, robotics clash, AI paper symposiums, coding sprints, and tech expos.',
+    category: 'Flagship Fests (Vitopia & VTAPP)',
+    tags: ['VTAPP', 'Hackathon', 'SCOPE', 'AI & ML', 'Robotics'],
+    format: 'Physical (On-Campus)',
+    date: '2026-10-14',
+    time: '09:00 AM - 08:00 PM',
+    timezone: 'IST (UTC+5:30)',
     location: {
-      venueName: 'Metropolitan Pavilion',
-      address: '125 W 18th St, New York',
-      city: 'New York',
-      country: 'USA',
-      lat: 40.7397,
-      lng: -73.9961
+      venueName: 'APJ Abdul Kalam Auditorium (AB1) & Multipurpose Hall (MPH)',
+      address: 'Academic Block 1 & Student Amenities Complex, VIT-AP',
+      city: 'Amaravati / Vijayawada',
+      country: 'India',
+      lat: 16.4975,
+      lng: 80.4998
     },
-    banner: 'https://images.unsplash.com/photo-1551818255-e6e10975bc17?auto=format&fit=crop&w=1600&q=80',
-    thumbnail: 'https://images.unsplash.com/photo-1551818255-e6e10975bc17?auto=format&fit=crop&w=600&q=80',
+    banner: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80',
     organizer: {
-      name: 'Figma & DesignSphere',
+      name: 'SCOPE (Computer Science) & GDSC VIT-AP',
       logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80',
       verified: true
     },
     ticketTiers: [
-      { id: 'tier-201', name: 'Standard', price: 149, perks: ['Design Workshops', 'UI Asset Kit'], capacity: 300, available: 45 },
-      { id: 'tier-202', name: 'VIP', price: 399, perks: ['Private Design Critique', 'Figma Pro License'], capacity: 50, available: 6 }
+      { id: 'tier-vt-1', name: 'Free Student Pass', price: 0, perks: ['Exhibition Pass', 'Certificate of Participation'], capacity: 2000, available: 320 },
+      { id: 'tier-vt-2', name: 'Group Hacker Pass', price: 199, perks: ['48h Hackathon Entry (MPH)', 'Meals & Refreshments', 'Swag Kit'], capacity: 500, available: 64 }
     ],
     speakers: [
       {
-        id: 'spk-3',
-        name: 'Sarah Chen',
-        role: 'Design Director',
-        company: 'Linear Studio',
-        avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80',
-        bio: 'Creator of high-performance minimalist interface systems and typography benchmarks.',
-        topics: ['Micro-Animations', 'Linear Aesthetic']
+        id: 'spk-vit-2',
+        name: 'Dr. Jagadish Chandran',
+        role: 'Dean, SCOPE',
+        company: 'VIT-AP University',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+        bio: 'Keynote on Agentic Artificial Intelligence & High-Performance Distributed Systems.',
+        topics: ['AI Engineering', 'Distributed Computing']
       }
     ],
     sponsors: [
-      { id: 'sp-3', name: 'Raycast', logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80', tier: 'Gold', website: 'https://raycast.com' }
+      { id: 'sp-vit-3', name: 'Google Cloud & GeeksForGeeks', logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80', tier: 'Platinum', website: 'https://gfg.org' }
     ],
     agenda: [
-      { id: 'ses-3', title: 'Designing Interfaces That WOW Senior Engineers', description: 'Mastering whitespace, contrast ratios, and physics-based motion transitions.', startTime: '10:15 AM', endTime: '12:00 PM', stage: 'Design Stage 1', speakerId: 'spk-3' }
+      { id: 'ses-vt-1', title: 'National Hackathon Opening Sprint in Multipurpose Hall', description: '24-48h non-stop build marathon hosted by GDSC, ACM & GFG Chapters.', startTime: '10:00 AM', endTime: '06:00 PM', stage: 'MPH Student Amenities', speakerId: 'spk-vit-2' }
     ],
-    rating: 4.85,
-    reviewCount: 194,
-    seatsLeft: 51,
-    totalCapacity: 350,
-    liveViewersCount: 890,
+    rating: 4.9,
+    reviewCount: 680,
+    seatsLeft: 320,
+    totalCapacity: 2500,
+    liveViewersCount: 1920,
     isFeatured: true,
-    isTrending: false,
-    priceFrom: 149
+    isTrending: true,
+    priceFrom: 0
   },
   {
-    id: 'evt-3',
-    slug: 'quantum-hackathon-2026',
-    title: 'Quantum Hackathon & Builders Clash',
-    description: '48 hours of non-stop hacking for $100,000 in prizes. Build next-gen AI applications, Web3 protocols, or autonomous edge services.',
-    category: 'Hackathons',
-    tags: ['Hackathon', 'Prize Pool', 'Open Source', 'AI Agents'],
+    id: 'evt-ic4ai-2026',
+    slug: 'ic4ai-2026-international-ai-conference',
+    title: 'IC4AI 2026 — International Conference on AI & Deep Learning',
+    description: 'High-level IEEE technical symposium organized by SCOPE & SENSE. Bringing together international researchers, foreign professors, and industry leaders to discuss LLMs, Agentic AI, and Quantum ML.',
+    category: 'Conferences & EDPs',
+    tags: ['IEEE', 'IC4AI', 'Research Paper', 'SCOPE', 'AI'],
     format: 'Hybrid',
-    date: '2026-11-12',
-    time: '24 Hours',
-    timezone: 'GMT (UTC+0)',
+    date: '2026-11-05',
+    time: '09:30 AM - 05:30 PM',
+    timezone: 'IST (UTC+5:30)',
     location: {
-      venueName: 'London Innovation Hub & Discord',
-      address: '10 Hacker Row, Shoreditch, London',
-      city: 'London',
-      country: 'UK',
-      lat: 51.5235,
-      lng: -0.0827,
-      virtualLink: 'https://hack.eventsphere.io'
+      venueName: 'APJ Abdul Kalam Auditorium (AB1 Stage 1)',
+      address: 'Academic Block 1, VIT-AP Campus',
+      city: 'Amaravati / Vijayawada',
+      country: 'India',
+      lat: 16.4971,
+      lng: 80.4992,
+      virtualLink: 'https://ic4ai.vitap.ac.in'
     },
     banner: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=1600&q=80',
     thumbnail: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=600&q=80',
     organizer: {
-      name: 'DevPost & EventSphere',
+      name: 'IEEE Student Branch & SCOPE Research Lab',
       logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80',
       verified: true
     },
     ticketTiers: [
-      { id: 'tier-301', name: 'Free', price: 0, perks: ['Hacker Pass', 'Free Meals & Drinks', 'Cloud Credits'], capacity: 2000, available: 420 }
+      { id: 'tier-ic-1', name: 'Free Student Pass', price: 0, perks: ['Auditorium Keynote Pass', 'Digital Certificate'], capacity: 500, available: 84 },
+      { id: 'tier-ic-2', name: 'Standard', price: 499, perks: ['Paper Presentation Entry', 'IEEE Conference Kit', 'Faculty Lunch'], capacity: 150, available: 12 }
     ],
     speakers: [],
     sponsors: [],
     agenda: [],
-    rating: 4.95,
-    reviewCount: 512,
-    seatsLeft: 420,
-    totalCapacity: 2000,
-    liveViewersCount: 2310,
+    rating: 4.88,
+    reviewCount: 310,
+    seatsLeft: 84,
+    totalCapacity: 650,
+    liveViewersCount: 940,
     isFeatured: true,
-    isTrending: true,
+    isTrending: false,
     priceFrom: 0
   }
 ];
@@ -182,7 +174,7 @@ export const MOCK_SEATS: Seat[] = Array.from({ length: 48 }, (_, idx) => {
     row,
     number,
     category: isVip ? 'VIP' : isFront ? 'Front Row' : isAccessible ? 'Accessible' : 'Standard',
-    price: isVip ? 799 : isFront ? 399 : 149,
+    price: isVip ? 799 : isFront ? 299 : 0,
     status: idx % 7 === 0 ? 'booked' : idx % 11 === 0 ? 'reserved' : 'available'
   };
 });

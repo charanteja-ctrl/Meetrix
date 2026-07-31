@@ -29,8 +29,8 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
             {event.category}
           </span>
           {event.isFeatured && (
-            <span className="px-2.5 py-1 bg-[#00E5A8] text-slate-950 text-[10px] font-bold rounded-full font-code">
-              FEATURED
+            <span className="px-2.5 py-1 bg-[#00E5A8] text-slate-950 text-[10px] font-bold rounded-full font-code uppercase">
+              VIT-AP FEATURED
             </span>
           )}
         </div>
@@ -58,7 +58,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
           </span>
           <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-lg border border-emerald-500/20">
             <Zap className="w-3 h-3 animate-pulse" />
-            {event.seatsLeft} Seats Left
+            {event.seatsLeft} Passes Remaining
           </span>
         </div>
 
@@ -75,7 +75,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
             </span>
             <span className="flex items-center gap-1">
               <MapPin className="w-3.5 h-3.5 text-[#00E5A8]" />
-              {event.location.city}
+              {event.location.venueName.split('&')[0]}
             </span>
           </div>
 
@@ -93,7 +93,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               <img src={event.organizer.logo} alt={event.organizer.name} className="w-5 h-5 rounded-full" />
-              <span className="text-slate-300 font-medium text-[11px] truncate max-w-[120px]">
+              <span className="text-slate-300 font-medium text-[11px] truncate max-w-[130px]">
                 {event.organizer.name}
               </span>
               {event.organizer.verified && <ShieldCheck className="w-3.5 h-3.5 text-[#00E5A8]" />}
@@ -106,12 +106,12 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
             </div>
           </div>
 
-          {/* Pricing & CTA */}
+          {/* Pricing & CTA in Rupees */}
           <div className="flex items-center justify-between pt-1">
             <div>
-              <p className="text-[10px] text-slate-400 font-mono">TIERS FROM</p>
-              <p className="font-heading text-base font-extrabold text-white">
-                {event.priceFrom === 0 ? <span className="text-[#00E5A8]">Free</span> : `$${event.priceFrom}`}
+              <p className="text-[10px] text-slate-400 font-mono">PASSES FROM</p>
+              <p className="font-heading text-base font-extrabold text-white font-mono">
+                {event.priceFrom === 0 ? <span className="text-[#00E5A8]">Free Pass</span> : `₹${event.priceFrom}`}
               </p>
             </div>
 
@@ -120,9 +120,9 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
                 setSelectedEvent(event);
                 setActiveView('event-detail');
               }}
-              className="px-4 py-2 bg-gradient-to-r from-[#6c63ff] to-[#584ee4] text-white rounded-xl text-xs font-bold hover:shadow-lg hover:shadow-[#6c63ff]/30 transition-all flex items-center gap-1.5"
+              className="px-4 py-2 bg-gradient-to-r from-[#6c63ff] to-[#584ee4] text-white rounded-xl text-xs font-bold hover:shadow-lg hover:shadow-[#6c63ff]/30 transition-all flex items-center gap-1.5 font-mono"
             >
-              <span>View & Book</span>
+              <span>Get Pass</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>

@@ -8,18 +8,18 @@ import confetti from 'canvas-confetti';
 export const EventDetailView: React.FC = () => {
   const { selectedEvent, addBooking, setActiveView } = useApp();
   const [showSeatMap, setShowSeatMap] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<TicketTier>(selectedEvent?.ticketTiers[0] || { id: 't-1', name: 'Standard', price: 299, perks: [], capacity: 500, available: 100 });
+  const [selectedTier, setSelectedTier] = useState<TicketTier>(selectedEvent?.ticketTiers[0] || { id: 't-1', name: 'Free Student Pass', price: 0, perks: [], capacity: 500, available: 100 });
   const [couponCode, setCouponCode] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
 
   if (!selectedEvent) return null;
 
   const handleApplyCoupon = () => {
-    if (couponCode.toUpperCase() === 'PROMO20' || couponCode.toUpperCase() === 'VIP50') {
+    if (couponCode.toUpperCase() === 'VITAP20' || couponCode.toUpperCase() === 'VITOPIA50') {
       setDiscountPercent(20);
-      alert('Coupon Applied! 20% discount granted.');
+      alert('VIT-AP Coupon Applied! 20% discount granted.');
     } else {
-      alert('Invalid coupon code. Try PROMO20');
+      alert('Invalid coupon code. Try VITAP20');
     }
   };
 
@@ -39,8 +39,8 @@ export const EventDetailView: React.FC = () => {
       qrCodeValue: `EVENTSPHERE-TKT-${Date.now()}-VALID`,
       purchasedAt: new Date().toISOString(),
       status: 'valid' as const,
-      attendeeName: 'Alex Rivera',
-      attendeeEmail: 'alex.rivera@eventsphere.io'
+      attendeeName: 'Alex Rivera (VIT-AP Reg: 23BCE1092)',
+      attendeeEmail: 'alex.rivera@vitap.ac.in'
     };
 
     addBooking(newBooking);
@@ -82,11 +82,11 @@ export const EventDetailView: React.FC = () => {
             </div>
             <div>
               <p className="text-slate-400">LOCATION</p>
-              <p className="font-bold text-[#00E5A8] mt-0.5">{selectedEvent.location.city}, {selectedEvent.location.country}</p>
+              <p className="font-bold text-[#00E5A8] mt-0.5">{selectedEvent.location.city}</p>
             </div>
             <div>
-              <p className="text-slate-400">FORMAT</p>
-              <p className="font-bold text-slate-200 mt-0.5">{selectedEvent.format}</p>
+              <p className="text-slate-400">VENUE</p>
+              <p className="font-bold text-slate-200 mt-0.5 truncate">{selectedEvent.location.venueName}</p>
             </div>
             <div>
               <p className="text-slate-400">RATING</p>
@@ -97,7 +97,7 @@ export const EventDetailView: React.FC = () => {
           {/* Speakers Section */}
           {selectedEvent.speakers.length > 0 && (
             <div className="space-y-4">
-              <h3 className="font-heading text-xl font-bold text-white">Featured Keynote Speakers</h3>
+              <h3 className="font-heading text-xl font-bold text-white">Guest Speakers & Dignitaries</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {selectedEvent.speakers.map(spk => (
                   <div key={spk.id} className="p-4 bg-[#14161d] border border-white/10 rounded-2xl flex items-center gap-4">
@@ -116,7 +116,7 @@ export const EventDetailView: React.FC = () => {
           {/* Interactive SVG Seat Map Trigger or Display */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-heading text-xl font-bold text-white">Venue Seating Allocation</h3>
+              <h3 className="font-heading text-xl font-bold text-white">Auditorium Seating Allocation</h3>
               <button
                 onClick={() => setShowSeatMap(!showSeatMap)}
                 className="px-4 py-2 bg-gradient-to-r from-[#00E5A8]/20 to-[#00D8F6]/20 border border-[#00E5A8]/40 text-[#00E5A8] rounded-xl text-xs font-bold font-mono"
@@ -139,22 +139,22 @@ export const EventDetailView: React.FC = () => {
         <div className="space-y-6">
           <div className="sticky top-24 p-6 bg-[#14161d] border border-white/15 rounded-3xl space-y-6 shadow-2xl">
             
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+            <div className="flex items-center justify-between pb-4 border-b border-white/10 font-mono">
               <div>
-                <p className="text-[10px] text-slate-400 font-mono">RESERVE TICKETS</p>
+                <p className="text-[10px] text-slate-400">RESERVE STUDENT PASS</p>
                 <p className="font-heading text-2xl font-extrabold text-[#00E5A8]">
-                  {selectedTier.price === 0 ? 'Free Pass' : `$${selectedTier.price} USD`}
+                  {selectedTier.price === 0 ? 'Free Pass' : `₹${selectedTier.price} INR`}
                 </p>
               </div>
-              <span className="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-mono rounded-full border border-emerald-500/30">
-                INSTANT ISSUANCE
+              <span className="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] rounded-full border border-emerald-500/30">
+                VIT-AP VERIFIED
               </span>
             </div>
 
             {/* Select Tier */}
             <div className="space-y-2">
               <label className="text-xs font-mono text-slate-300">Select Pass Tier:</label>
-              <div className="space-y-2">
+              <div className="space-y-2 font-mono">
                 {selectedEvent.ticketTiers.map(t => (
                   <div
                     key={t.id}
@@ -167,7 +167,7 @@ export const EventDetailView: React.FC = () => {
                   >
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold">{t.name}</span>
-                      <span className="font-mono text-[#00E5A8]">{t.price === 0 ? 'Free' : `$${t.price}`}</span>
+                      <span className="text-[#00E5A8]">{t.price === 0 ? 'Free' : `₹${t.price}`}</span>
                     </div>
                   </div>
                 ))}
@@ -176,14 +176,14 @@ export const EventDetailView: React.FC = () => {
 
             {/* Coupon Code Input */}
             <div className="space-y-2">
-              <label className="text-xs font-mono text-slate-300">Coupon Code:</label>
+              <label className="text-xs font-mono text-slate-300">Campus Coupon Code:</label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={couponCode}
                   onChange={e => setCouponCode(e.target.value)}
-                  placeholder="PROMO20"
-                  className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white uppercase focus:outline-none focus:border-[#6c63ff]"
+                  placeholder="VITAP20"
+                  className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white uppercase focus:outline-none focus:border-[#6c63ff] font-mono"
                 />
                 <button
                   onClick={handleApplyCoupon}
@@ -197,14 +197,14 @@ export const EventDetailView: React.FC = () => {
             {/* Action Checkout */}
             <button
               onClick={() => setShowSeatMap(true)}
-              className="w-full py-3.5 bg-gradient-to-r from-[#6c63ff] to-[#584ee4] text-white font-bold rounded-2xl text-xs hover:shadow-xl hover:shadow-[#6c63ff]/30 transition-all flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-gradient-to-r from-[#6c63ff] to-[#584ee4] text-white font-bold rounded-2xl text-xs hover:shadow-xl hover:shadow-[#6c63ff]/30 transition-all flex items-center justify-center gap-2 font-mono"
             >
               <Ticket className="w-4 h-4 text-[#00E5A8]" />
-              <span>Select Seats & Checkout</span>
+              <span>Select Seats & Get QR Pass</span>
             </button>
 
             <p className="text-[10px] text-center text-slate-500 font-mono">
-              🔒 Encrypted 256-bit Stripe Checkout • Instant Apple Wallet Sync
+              🔒 VIT-AP SSO Authentication • Instant Dynamic Gate Pass QR
             </p>
 
           </div>

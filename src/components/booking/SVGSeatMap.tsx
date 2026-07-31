@@ -37,20 +37,20 @@ export const SVGSeatMap: React.FC<SVGSeatMapProps> = ({ onConfirmSeats }) => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
         <div>
           <h3 className="font-heading text-lg font-bold text-white flex items-center gap-2">
-            <span>Interactive Venue Seat Map</span>
-            <span className="px-2 py-0.5 bg-[#6c63ff]/20 text-[#6c63ff] border border-[#6c63ff]/30 text-[10px] font-mono rounded-full">
+            <span>APJ Abdul Kalam Auditorium (AB1) Map</span>
+            <span className="px-2 py-0.5 bg-[#6c63ff]/20 text-[#00E5A8] border border-[#6c63ff]/30 text-[10px] font-mono rounded-full">
               LIVE SEAT ALLOCATION
             </span>
           </h3>
-          <p className="text-xs text-slate-400">Click any available seat to select your spot in the arena.</p>
+          <p className="text-xs text-slate-400">Click any available seat to reserve your spot in AB1 Auditorium.</p>
         </div>
 
         <button
           onClick={handleAutoRecommend}
-          className="px-3.5 py-2 bg-gradient-to-r from-[#00E5A8]/20 to-[#00D8F6]/20 border border-[#00E5A8]/40 text-[#00E5A8] rounded-xl text-xs font-semibold hover:bg-[#00E5A8]/30 transition-all flex items-center gap-1.5 self-start sm:self-auto"
+          className="px-3.5 py-2 bg-gradient-to-r from-[#00E5A8]/20 to-[#00D8F6]/20 border border-[#00E5A8]/40 text-[#00E5A8] rounded-xl text-xs font-semibold hover:bg-[#00E5A8]/30 transition-all flex items-center gap-1.5 self-start sm:self-auto font-mono"
         >
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Auto-Recommend Best Seats</span>
+          <span>Recommend Best Seats</span>
         </button>
       </div>
 
@@ -58,19 +58,19 @@ export const SVGSeatMap: React.FC<SVGSeatMapProps> = ({ onConfirmSeats }) => {
       <div className="flex flex-wrap items-center gap-4 text-xs font-mono">
         <div className="flex items-center gap-2">
           <span className="w-3.5 h-3.5 rounded-full bg-[#9D4EDD]"></span>
-          <span className="text-slate-300">VIP Zone ($799)</span>
+          <span className="text-slate-300">VIP Pro Zone (₹799)</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-3.5 h-3.5 rounded-full bg-[#00E5A8]"></span>
-          <span className="text-slate-300">Front Row ($399)</span>
+          <span className="text-slate-300">Front Row (₹299)</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-3.5 h-3.5 rounded-full bg-[#6c63ff]"></span>
-          <span className="text-slate-300">Standard ($149)</span>
+          <span className="text-slate-300">Standard Student (₹0 Free)</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-3.5 h-3.5 rounded-full bg-cyan-400"></span>
-          <span className="text-slate-300">Accessible ($149)</span>
+          <span className="text-slate-300">Accessible (₹0 Free)</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-3.5 h-3.5 rounded-full bg-slate-700"></span>
@@ -81,7 +81,7 @@ export const SVGSeatMap: React.FC<SVGSeatMapProps> = ({ onConfirmSeats }) => {
       {/* Stage Screen Area */}
       <div className="w-full py-2 bg-gradient-to-r from-transparent via-[#6c63ff]/30 to-transparent border-t-2 border-[#6c63ff] rounded-t-full text-center">
         <span className="text-[10px] font-mono text-[#6c63ff] uppercase tracking-widest font-bold">
-          ▲ MAINSTAGE & SCREEN AREA ▲
+          ▲ AB1 AUDITORIUM MAINSTAGE & HD PROJECTION ▲
         </span>
       </div>
 
@@ -123,10 +123,10 @@ export const SVGSeatMap: React.FC<SVGSeatMapProps> = ({ onConfirmSeats }) => {
         {hoveredSeat ? (
           <span className="text-white flex items-center gap-2">
             <Info className="w-3.5 h-3.5 text-[#00E5A8]" />
-            Seat {hoveredSeat.row}-{hoveredSeat.number} • Category: {hoveredSeat.category} • Price: ${hoveredSeat.price}
+            Seat {hoveredSeat.row}-{hoveredSeat.number} • Category: {hoveredSeat.category} • Price: ₹{hoveredSeat.price}
           </span>
         ) : (
-          <span className="text-slate-400">Hover over any seat to view category details & pricing.</span>
+          <span className="text-slate-400">Hover over any seat to view category details & pricing in INR (₹).</span>
         )}
       </div>
 
@@ -134,20 +134,20 @@ export const SVGSeatMap: React.FC<SVGSeatMapProps> = ({ onConfirmSeats }) => {
       {selectedSeatIds.length > 0 && (
         <div className="p-4 bg-gradient-to-r from-[#6c63ff]/20 via-[#14161d] to-[#00E5A8]/20 border border-white/20 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in">
           <div>
-            <p className="text-xs font-semibold text-white">
+            <p className="text-xs font-semibold text-white font-mono">
               Selected ({selectedSeats.length}): {selectedSeats.map(s => `${s.row}${s.number}`).join(', ')}
             </p>
-            <p className="text-sm font-extrabold text-[#00E5A8] mt-0.5">
-              Total: ${totalPrice} USD
+            <p className="text-sm font-extrabold text-[#00E5A8] mt-0.5 font-mono">
+              Total: ₹{totalPrice} INR
             </p>
           </div>
 
           <button
             onClick={() => onConfirmSeats(selectedSeats)}
-            className="px-6 py-2.5 bg-[#00E5A8] text-slate-950 font-bold rounded-xl text-xs hover:bg-[#00E5A8]/90 transition-all shadow-lg shadow-[#00E5A8]/20 flex items-center justify-center gap-2"
+            className="px-6 py-2.5 bg-[#00E5A8] text-slate-950 font-bold rounded-xl text-xs hover:bg-[#00E5A8]/90 transition-all shadow-lg shadow-[#00E5A8]/20 flex items-center justify-center gap-2 font-mono"
           >
             <CheckCircle className="w-4 h-4" />
-            <span>Proceed to Checkout</span>
+            <span>Proceed to Pass Checkout</span>
           </button>
         </div>
       )}

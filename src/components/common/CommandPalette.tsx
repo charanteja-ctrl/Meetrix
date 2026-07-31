@@ -77,7 +77,7 @@ export const CommandPalette: React.FC = () => {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Type a command, search events, jump to tools..."
+            placeholder="Type a command, search VIT-AP events, AB1, Vitopia..."
             className="w-full bg-transparent text-sm text-white placeholder-slate-400 focus:outline-none font-sans"
             autoFocus
           />
@@ -90,12 +90,12 @@ export const CommandPalette: React.FC = () => {
         </div>
 
         {/* Results List */}
-        <div className="max-h-[60vh] overflow-y-auto p-2 space-y-4">
+        <div className="max-h-[60vh] overflow-y-auto p-2 space-y-4 font-mono">
           
           {/* Quick Actions */}
           {!query && (
             <div>
-              <div className="px-3 py-1 text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+              <div className="px-3 py-1 text-[10px] text-slate-400 uppercase tracking-wider">
                 Quick Navigation & Actions
               </div>
               <div className="mt-1 space-y-1">
@@ -121,7 +121,7 @@ export const CommandPalette: React.FC = () => {
 
           {/* Events Search Matches */}
           <div>
-            <div className="px-3 py-1 text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+            <div className="px-3 py-1 text-[10px] text-slate-400 uppercase tracking-wider">
               {query ? 'Matching Events' : 'Popular Featured Events'}
             </div>
             <div className="mt-1 space-y-1">
@@ -139,11 +139,11 @@ export const CommandPalette: React.FC = () => {
                     <img src={evt.thumbnail} alt={evt.title} className="w-8 h-8 rounded-lg object-cover" />
                     <div className="text-left">
                       <p className="font-semibold text-white group-hover:text-[#00E5A8] transition-colors">{evt.title}</p>
-                      <p className="text-[10px] text-slate-400">{evt.category} • {evt.location.city}, {evt.location.country}</p>
+                      <p className="text-[10px] text-slate-400">{evt.category} • {evt.location.venueName.split(' ')[0]}</p>
                     </div>
                   </div>
-                  <span className="text-[10px] px-2 py-0.5 bg-white/10 rounded-full font-code text-slate-300">
-                    {evt.priceFrom === 0 ? 'Free Pass' : `$${evt.priceFrom}`}
+                  <span className="text-[10px] px-2 py-0.5 bg-white/10 rounded-full text-slate-300">
+                    {evt.priceFrom === 0 ? 'Free Pass' : `₹${evt.priceFrom}`}
                   </span>
                 </button>
               ))}
@@ -152,11 +152,11 @@ export const CommandPalette: React.FC = () => {
 
           {/* Quick Role Switch Shortcuts */}
           <div>
-            <div className="px-3 py-1 text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+            <div className="px-3 py-1 text-[10px] text-slate-400 uppercase tracking-wider">
               Switch Role Context
             </div>
             <div className="grid grid-cols-2 gap-1 mt-1">
-              {(['Organizer', 'Admin', 'Attendee', 'Sponsor'] as const).map(role => (
+              {(['Club Lead & Organizer', 'Admin', 'Student Attendee', 'Sponsor & Vendor'] as const).map(role => (
                 <button
                   key={role}
                   onClick={() => {
@@ -165,8 +165,8 @@ export const CommandPalette: React.FC = () => {
                   }}
                   className="flex items-center justify-between p-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-slate-300 transition-colors"
                 >
-                  <span>Switch to {role}</span>
-                  <span className="text-[10px] text-slate-500 font-code">Role</span>
+                  <span className="truncate">{role}</span>
+                  <span className="text-[10px] text-slate-500">Role</span>
                 </button>
               ))}
             </div>
@@ -177,7 +177,7 @@ export const CommandPalette: React.FC = () => {
         {/* Footer Hint */}
         <div className="px-4 py-2 border-t border-white/10 bg-white/[0.02] flex items-center justify-between text-[11px] text-slate-400 font-mono">
           <span>Navigate with ↑ ↓ and Enter</span>
-          <span className="text-[10px] text-[#00E5A8]">EventSphere Command v2.4</span>
+          <span className="text-[10px] text-[#00E5A8]">EventSphere VIT-AP v2.4</span>
         </div>
 
       </div>
