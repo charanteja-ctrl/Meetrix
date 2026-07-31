@@ -1,7 +1,15 @@
-# 🚀 EventSphere AI — VIT-AP Campus Event Management Platform (Vercel Edition)
+# 🚀 EventSphere AI — VIT-AP Campus Event Management Platform
 
-> **The Production-Grade Institutional SaaS Platform for VIT-AP University**  
-> Tailored specifically for VIT-AP student clubs (GDSC, ACM, GFG, CSI, IEEE, SEDS), administrative approval workflows (DSW + Registrar), venue spatial management (AB1 Auditorium, MPH, OAT), VTOP On-Duty (OD) sheet generation, and dynamic 30-second anti-screenshot QR ticketing.
+> **Lead Architect & Developer:** **G. Charan Teja**  
+> **Repository:** [https://github.com/charanteja-ctrl/Meetrix](https://github.com/charanteja-ctrl/Meetrix)  
+> **Platform Target:** VIT-AP University (Amaravati) & Vercel Production Deployment
+
+---
+
+## 👨‍💻 Developer & Credits
+- **Lead Software Engineer & System Architect:** **G. Charan Teja**
+- **Institution:** VIT-AP University
+- **Core Stack:** Next.js / Vite, React 19, TypeScript, Tailwind CSS, Supabase PostgreSQL, Vercel Serverless
 
 ---
 
@@ -195,4 +203,4 @@ npx tsc --noEmit && npm run build
 ```
 
 ---
-*Built with ❤️ for VIT-AP University.*
+*Designed & Developed by **G. Charan Teja** for **VIT-AP University**.*

@@ -83,7 +83,7 @@ export const Navbar: React.FC = () => {
             </div>
             <p className="text-[11px] text-slate-400 font-mono tracking-wide flex items-center gap-1 mt-0.5">
               <MapPin className="w-3 h-3 text-[#00E5A8]" />
-              VIT-AP University Campus • Amaravati
+              VIT-AP Campus • <span className="text-[#00E5A8] font-bold">Dev: G. Charan Teja</span>
             </p>
           </div>
         </div>

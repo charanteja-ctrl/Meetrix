@@ -16,7 +16,7 @@ import { ODAndCertificatesView } from './views/ODAndCertificatesView';
 import { NetworkingView } from './views/NetworkingView';
 import { ApprovalPipelineManager } from './components/admin/ApprovalPipelineManager';
 import { LiveGateOccupancy } from './components/dashboard/LiveGateOccupancy';
-import { QrCode } from 'lucide-react';
+import { QrCode, Code } from 'lucide-react';
 
 const AppContent: React.FC = () => {
   const { activeView, bookings, setScannerModalOpen } = useApp();
@@ -119,11 +119,12 @@ const AppContent: React.FC = () => {
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#00E5A8]"></span>
             <span className="font-bold text-white font-heading">EventSphere VIT-AP</span>
-            <span>— Institutional Event Management Platform</span>
+            <span>— Designed & Developed by <strong className="text-[#00E5A8]">G. Charan Teja</strong></span>
           </div>
 
-          <p className="text-slate-500 text-[11px]">
-            Engineered for VIT-AP University • Powered by Next.js, Supabase & Vercel
+          <p className="text-slate-500 text-[11px] flex items-center gap-1">
+            <Code className="w-3.5 h-3.5 text-[#6c63ff]" />
+            Engineered for VIT-AP University • Lead Developer: G. Charan Teja
           </p>
         </div>
       </footer>
