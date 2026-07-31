@@ -116,9 +116,9 @@ const AppContent: React.FC = () => {
       {/* Footer */}
       <footer className="border-t border-white/10 bg-[#0a0b0d] py-10 text-xs text-slate-400 font-mono">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#00E5A8]"></span>
-            <span className="font-bold text-white font-heading">EventSphere VIT-AP</span>
+          <div className="flex items-center gap-3">
+            <img src="/logo.jpg" alt="EventOS Logo" className="h-7 w-auto rounded-md border border-white/10" />
+            <span className="font-bold text-white font-heading text-sm">EventOS VIT-AP</span>
             <span>— Designed & Developed by <strong className="text-[#00E5A8]">G. Charan Teja</strong></span>
           </div>
 

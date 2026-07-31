@@ -61,21 +61,23 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-40 w-full glass-panel border-b border-white/10 backdrop-blur-xl transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-6">
         
-        {/* Brand & Campus Title */}
+        {/* Brand & Official Logo Title */}
         <div 
           onClick={() => setActiveView('home')} 
           className="flex items-center gap-3.5 cursor-pointer group select-none shrink-0"
         >
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#6c63ff] via-[#00E5A8] to-[#9D4EDD] p-[1.5px] shadow-lg shadow-[#6c63ff]/20 transition-transform duration-300 group-hover:scale-105">
-            <div className="w-full h-full bg-[#0d0e12] rounded-[13px] flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-[#00E5A8] animate-pulse-slow" />
-            </div>
+          <div className="h-11 px-2.5 rounded-2xl bg-black/80 border border-white/15 shadow-lg shadow-[#6c63ff]/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 overflow-hidden">
+            <img 
+              src="/logo.jpg" 
+              alt="EventOS Logo" 
+              className="h-8 w-auto object-contain rounded-lg" 
+            />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
               <span className="font-heading text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-300">
-                EventSphere
+                EventOS
               </span>
               <span className="px-2 py-0.5 text-[9px] font-bold bg-[#6c63ff]/20 text-[#00E5A8] border border-[#6c63ff]/40 rounded-full font-code uppercase">
                 VIT-AP EDITION
