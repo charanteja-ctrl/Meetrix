@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { TicketBooking } from '../../types/event';
-import { QrCode, Download, Wallet, Calendar } from 'lucide-react';
+import { DynamicQRPass } from './DynamicQRPass';
+import { Download, QrCode, MapPin } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface PassCard3DProps {
@@ -9,125 +10,117 @@ interface PassCard3DProps {
 
 export const PassCard3D: React.FC<PassCard3DProps> = ({ booking }) => {
   const [flipped, setFlipped] = useState(false);
-  const [downloading, setDownloading] = useState(false);
 
-  const handleWalletAdd = (type: 'Apple' | 'Google') => {
-    confetti({ particleCount: 50, spread: 60 });
-    alert(`Pass added to your ${type} Wallet! Syncing offline pass metadata.`);
+  const handleDownloadPDF = () => {
+    confetti({ particleCount: 80, spread: 60 });
+    alert(`📥 PDF Gate Pass Downloaded for ${booking.eventTitle}!\nFile saved: VITAP_PASS_${booking.id}.pdf`);
   };
 
-  const handleExportPDF = () => {
-    setDownloading(true);
-    setTimeout(() => {
-      setDownloading(false);
-      alert(`PDF Ticket Pass for ${booking.eventTitle} downloaded!`);
-    }, 1200);
+  const handleAddToWallet = (type: 'Apple' | 'Google') => {
+    alert(`📱 Added ${booking.eventTitle} Pass to ${type} Wallet! Syncing with VIT-AP VTOP ID...`);
   };
 
   return (
-    <div className="max-w-md mx-auto perspective-1000">
+    <div className="space-y-4 max-w-md mx-auto">
       
-      {/* 3D Flip Container */}
+      {/* 3D Flip Card Container */}
       <div 
+        className="perspective-1000 w-full min-h-[520px] cursor-pointer group"
         onClick={() => setFlipped(!flipped)}
-        className={`relative w-full min-h-[460px] rounded-3xl p-6 glass-card border border-white/20 shadow-2xl cursor-pointer transition-transform duration-700 transform-style-3d ${
-          flipped ? 'rotate-y-180' : ''
-        }`}
       >
-        
-        {/* FRONT SIDE OF PASS */}
-        <div className="flex flex-col justify-between h-full space-y-6">
+        <div className={`relative w-full h-full duration-700 transform-style-3d transition-transform ${flipped ? 'rotate-y-180' : ''}`}>
           
-          {/* Top Banner & Status */}
-          <div>
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 bg-[#6c63ff]/20 text-[#00E5A8] border border-[#6c63ff]/40 text-[10px] font-mono font-bold rounded-full">
-                EVENTSPHERE DIGITAL PASS
-              </span>
-              <span className="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono font-bold rounded-full flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                VALID TICKET
-              </span>
-            </div>
-
-            <h3 className="font-heading text-xl font-extrabold text-white mt-4 leading-snug">
-              {booking.eventTitle}
-            </h3>
+          {/* FRONT SIDE: Apple Wallet-Style Pass Card */}
+          <div className="absolute inset-0 backface-hidden rounded-3xl bg-gradient-to-b from-[#181a20] via-[#14161d] to-[#0d0e12] border border-white/20 p-6 shadow-2xl flex flex-col justify-between overflow-hidden">
             
-            <p className="text-xs text-slate-400 mt-1 flex items-center gap-1 font-mono">
-              <Calendar className="w-3.5 h-3.5 text-[#6c63ff]" />
-              {booking.eventDate}
-            </p>
-          </div>
+            {/* Top Brand Banner */}
+            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#00E5A8] animate-pulse"></span>
+                <span className="font-heading text-sm font-extrabold text-white">VIT-AP PASS</span>
+              </div>
+              <span className="px-2.5 py-0.5 bg-[#6c63ff]/20 text-[#00E5A8] border border-[#6c63ff]/40 text-[10px] font-mono rounded-full font-bold">
+                {booking.tierName.toUpperCase()}
+              </span>
+            </div>
 
-          {/* Ticket Details Box */}
-          <div className="grid grid-cols-2 gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl text-xs font-mono">
-            <div>
-              <p className="text-[10px] text-slate-400">ATTENDEE</p>
-              <p className="font-bold text-white truncate">{booking.attendeeName}</p>
-            </div>
-            <div>
-              <p className="text-[10px] text-slate-400">TIER PASS</p>
-              <p className="font-bold text-[#00E5A8]">{booking.tierName}</p>
-            </div>
-            <div>
-              <p className="text-[10px] text-slate-400">ASSIGNED SEAT</p>
-              <p className="font-bold text-amber-400">{booking.seatNumber || 'General Admission'}</p>
-            </div>
-            <div>
-              <p className="text-[10px] text-slate-400">BOOKING ID</p>
-              <p className="font-bold text-slate-300">{booking.id}</p>
-            </div>
-          </div>
-
-          {/* QR Code Section */}
-          <div className="flex flex-col items-center justify-center p-4 bg-white rounded-2xl shadow-inner">
-            {/* Visual Encrypted QR Matrix Simulation */}
-            <div className="w-36 h-36 bg-slate-950 p-3 rounded-xl flex flex-col justify-between">
-              <div className="flex justify-between">
-                <div className="w-8 h-8 border-2 border-white bg-white p-1">
-                  <div className="w-full h-full bg-black"></div>
-                </div>
-                <div className="w-8 h-8 border-2 border-white bg-white p-1">
-                  <div className="w-full h-full bg-black"></div>
+            {/* Event Media Banner & Info */}
+            <div className="my-4 space-y-3">
+              <div className="relative h-32 rounded-2xl overflow-hidden border border-white/10">
+                <img src={booking.eventBanner} alt={booking.eventTitle} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-3 flex flex-col justify-end">
+                  <h3 className="font-heading text-base font-bold text-white line-clamp-1">{booking.eventTitle}</h3>
+                  <p className="text-[11px] text-slate-300 font-mono flex items-center gap-1">
+                    <MapPin className="w-3 h-3 text-[#00E5A8]" />
+                    {booking.eventLocation}
+                  </p>
                 </div>
               </div>
-              <div className="text-center font-mono text-[9px] text-emerald-400 tracking-tighter overflow-hidden">
-                {booking.qrCodeValue}
-              </div>
-              <div className="flex justify-between items-end">
-                <div className="w-8 h-8 border-2 border-white bg-white p-1">
-                  <div className="w-full h-full bg-black"></div>
+
+              {/* Attendee Details Grid */}
+              <div className="grid grid-cols-2 gap-3 p-3 bg-white/5 rounded-2xl text-xs font-mono">
+                <div>
+                  <p className="text-[10px] text-slate-400">ATTENDEE</p>
+                  <p className="font-bold text-white truncate">{booking.attendeeName}</p>
                 </div>
-                <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></div>
+                <div>
+                  <p className="text-[10px] text-slate-400">REG NO</p>
+                  <p className="font-bold text-[#00E5A8]">23BCE1092</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-400">DATE</p>
+                  <p className="text-slate-200">{booking.eventDate}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-400">SEAT / ZONE</p>
+                  <p className="text-amber-400 font-bold">{booking.seatNumber || 'General Entry'}</p>
+                </div>
               </div>
             </div>
-            <span className="text-[10px] text-slate-600 font-mono mt-2 flex items-center gap-1">
-              <QrCode className="w-3 h-3 text-[#6c63ff]" /> Tap pass to flip for Wallet details
-            </span>
+
+            {/* Bottom Flip Action CTA */}
+            <div className="pt-4 border-t border-white/10 flex items-center justify-between font-mono text-xs text-slate-300">
+              <span className="flex items-center gap-1.5 text-[#00E5A8] font-bold">
+                <QrCode className="w-4 h-4" />
+                Tap to Flip for Dynamic QR Pass
+              </span>
+              <span className="text-[10px] text-slate-500">ID: {booking.id}</span>
+            </div>
+
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2 pt-2" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={() => handleWalletAdd('Apple')}
-              className="flex-1 py-2 bg-white/10 hover:bg-white/20 border border-white/15 text-white rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5"
-            >
-              <Wallet className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Apple Wallet</span>
-            </button>
-            
-            <button
-              onClick={handleExportPDF}
-              className="px-4 py-2 bg-[#6c63ff] hover:bg-[#584ee4] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>{downloading ? 'Exporting...' : 'PDF'}</span>
-            </button>
+          {/* BACK SIDE: Dynamic Anti-Screenshot QR Pass */}
+          <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-3xl bg-[#0d0e12] overflow-hidden">
+            <DynamicQRPass booking={booking} />
           </div>
 
         </div>
+      </div>
 
+      {/* Action Buttons: PDF Download & Apple/Google Wallet */}
+      <div className="flex flex-col sm:flex-row items-center gap-2 pt-2">
+        <button
+          onClick={handleDownloadPDF}
+          className="w-full py-3 bg-[#00E5A8] text-slate-950 font-bold rounded-2xl text-xs hover:bg-[#00E5A8]/90 transition-all flex items-center justify-center gap-2 font-mono shadow-lg shadow-[#00E5A8]/20"
+        >
+          <Download className="w-4 h-4" />
+          <span>Download PDF Ticket</span>
+        </button>
+
+        <div className="flex w-full gap-2 font-mono">
+          <button
+            onClick={() => handleAddToWallet('Apple')}
+            className="flex-1 py-3 bg-white/10 hover:bg-white/20 border border-white/15 text-white font-semibold rounded-2xl text-[11px] transition-all"
+          >
+             Apple Wallet
+          </button>
+          <button
+            onClick={() => handleAddToWallet('Google')}
+            className="flex-1 py-3 bg-white/10 hover:bg-white/20 border border-white/15 text-white font-semibold rounded-2xl text-[11px] transition-all"
+          >
+            G Google Wallet
+          </button>
+        </div>
       </div>
 
     </div>

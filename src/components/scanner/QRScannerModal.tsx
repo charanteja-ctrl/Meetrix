@@ -1,123 +1,218 @@
 import React, { useState } from 'react';
-import { QrCode, CheckCircle2, AlertTriangle, RefreshCw, Camera, History } from 'lucide-react';
+import { QrCode, CheckCircle2, AlertTriangle, X, Camera, ShieldCheck } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 export const QRScannerModal: React.FC = () => {
-  const [scanResult, setScanResult] = useState<{ status: 'valid' | 'duplicate' | 'invalid'; ticketId?: string; name?: string } | null>(null);
-  const [scanning, setScanning] = useState(false);
-  const [scanLogs, setScanLogs] = useState<{ time: string; code: string; status: string }[]>([
-    { time: '10:14:22 AM', code: 'EVENTSPHERE-TKT-8819', status: 'VALID (VIP)' },
-    { time: '10:12:05 AM', code: 'EVENTSPHERE-TKT-3341', status: 'VALID (STD)' }
-  ]);
+  const { scannerModalOpen, setScannerModalOpen, bookings, updateBookingStatus } = useApp();
+  const [manualCode, setManualCode] = useState('');
+  const [scanResult, setScanResult] = useState<{
+    status: 'success' | 'duplicate' | 'invalid' | 'idle';
+    message: string;
+    attendeeName?: string;
+    regNo?: string;
+    timestamp?: string;
+  }>({ status: 'idle', message: 'Point camera at student dynamic QR pass or enter Reg No manually.' });
 
-  const simulateScan = () => {
-    setScanning(true);
-    setScanResult(null);
+  const [totalScanned, setTotalScanned] = useState<number>(142);
+  const [duplicatesBlocked, setDuplicatesBlocked] = useState<number>(3);
+  const [scannedRegNos, setScannedRegNos] = useState<Set<string>>(new Set(['23BCE0001', '23BCE0002']));
 
-    setTimeout(() => {
-      setScanning(false);
-      const isSuccess = Math.random() > 0.15;
-      if (isSuccess) {
-        const result = {
-          status: 'valid' as const,
-          ticketId: 'TKT-8819',
-          name: 'Alex Rivera (VIP Arena - Seat A4)'
-        };
-        setScanResult(result);
-        setScanLogs(prev => [{ time: new Date().toLocaleTimeString(), code: 'EVENTSPHERE-TKT-8819', status: 'VALID (VIP)' }, ...prev]);
+  // Audio chimes simulation
+  const playSound = (type: 'success' | 'error') => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === 'success') {
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1); // A5
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.25);
       } else {
-        setScanResult({ status: 'duplicate' });
+        osc.frequency.setValueAtTime(220, ctx.currentTime); // A3
+        osc.frequency.setValueAtTime(146.83, ctx.currentTime + 0.15); // D3
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
       }
-    }, 1000);
+    } catch (e) {
+      console.log('Audio Context unsupported');
+    }
   };
 
+  const processScanPayload = (rawPayload: string) => {
+    const time = new Date().toLocaleTimeString();
+
+    // Check if code has already been scanned (Duplicate scan prevention)
+    if (scannedRegNos.has(rawPayload) || rawPayload.includes('ALREADY-SCANNED')) {
+      playSound('error');
+      setDuplicatesBlocked(prev => prev + 1);
+      setScanResult({
+        status: 'duplicate',
+        message: '⚠️ DUPLICATE ENTRY BLOCKED! Pass has already been checked in.',
+        attendeeName: 'Alex Rivera',
+        regNo: '23BCE1092',
+        timestamp: time
+      });
+      return;
+    }
+
+    // Success Check-in
+    playSound('success');
+    setScannedRegNos(prev => new Set(prev).add(rawPayload));
+    setTotalScanned(prev => prev + 1);
+    
+    // Find matching booking if available
+    const matchingBooking = bookings[0];
+    if (matchingBooking) {
+      updateBookingStatus(matchingBooking.id, 'checked-in');
+    }
+
+    setScanResult({
+      status: 'success',
+      message: '✅ VERIFIED ENTRY GRANTED! Gate gate pass authenticated via SSO.',
+      attendeeName: matchingBooking?.attendeeName || 'Alex Rivera',
+      regNo: '23BCE1092',
+      timestamp: time
+    });
+  };
+
+  const handleSimulateScanSuccess = () => {
+    processScanPayload(`VITAP:TKT:tkt-${Date.now()}:Alex:23BCE1092`);
+  };
+
+  const handleSimulateScanDuplicate = () => {
+    processScanPayload('ALREADY-SCANNED');
+  };
+
+  const handleManualSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!manualCode.trim()) return;
+    processScanPayload(manualCode.trim());
+    setManualCode('');
+  };
+
+  if (!scannerModalOpen) return null;
+
   return (
-    <div className="max-w-3xl mx-auto bg-[#14161d] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
-      
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
-        <div>
-          <h3 className="font-heading text-xl font-bold text-white flex items-center gap-2">
-            <span>Volunteer & Staff Attendance Kiosk</span>
-            <span className="px-2.5 py-0.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono rounded-full flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-              OFFLINE SYNC ACTIVE
-            </span>
-          </h3>
-          <p className="text-xs text-slate-400">Instant QR ticket validation, duplicate entry detection & live check-in logs.</p>
-        </div>
-      </div>
-
-      {/* Camera Scanner Viewport Simulator */}
-      <div className="relative h-64 sm:h-72 bg-slate-950 border-2 border-dashed border-[#6c63ff]/50 rounded-2xl overflow-hidden flex flex-col items-center justify-center p-6 text-center group">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="w-full max-w-xl bg-[#14161d] border border-white/15 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
         
-        {/* Animated Scan Line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00E5A8] to-transparent animate-bounce shadow-lg shadow-[#00E5A8]/50" />
+        {/* Header Bar */}
+        <div className="flex items-center justify-between p-5 border-b border-white/10">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#6c63ff] to-[#00E5A8] p-[1px]">
+              <div className="w-full h-full bg-[#101114] rounded-[11px] flex items-center justify-center text-[#00E5A8]">
+                <QrCode className="w-4 h-4" />
+              </div>
+            </div>
+            <div>
+              <h3 className="font-heading text-sm font-bold text-white">VIT-AP Gate Scanner Kiosk</h3>
+              <p className="text-[10px] text-slate-400 font-mono">Volunteer Access Control • Sub-Second Validation</p>
+            </div>
+          </div>
 
-        <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-          <Camera className="w-10 h-10 text-[#00E5A8] animate-pulse" />
-        </div>
-
-        <p className="text-xs font-mono text-white font-semibold">Position QR Pass in Camera Frame</p>
-        <p className="text-[11px] text-slate-400 max-w-xs mt-1">Supports physical printed tickets, Apple Wallet passes & smartphone screens.</p>
-
-        <div className="flex items-center gap-3 mt-4">
-          <button
-            onClick={simulateScan}
-            disabled={scanning}
-            className="px-6 py-2.5 bg-gradient-to-r from-[#6c63ff] to-[#584ee4] text-white font-bold rounded-xl text-xs hover:shadow-lg hover:shadow-[#6c63ff]/30 transition-all flex items-center gap-2"
+          <button 
+            onClick={() => setScannerModalOpen(false)}
+            className="p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
           >
-            {scanning ? <RefreshCw className="w-4 h-4 animate-spin" /> : <QrCode className="w-4 h-4 text-[#00E5A8]" />}
-            <span>{scanning ? 'Validating Pass...' : 'Simulate Camera Scan'}</span>
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-      </div>
-
-      {/* Result Status Banner */}
-      {scanResult && (
-        <div className={`p-4 rounded-2xl border flex items-center gap-4 animate-in fade-in ${
-          scanResult.status === 'valid'
-            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-            : 'bg-[#FF5A76]/10 border-[#FF5A76]/30 text-[#FF5A76]'
-        }`}>
-          {scanResult.status === 'valid' ? (
-            <>
-              <CheckCircle2 className="w-8 h-8 shrink-0" />
-              <div>
-                <p className="text-sm font-bold text-white">ACCESS GRANTED! Valid Pass Detected</p>
-                <p className="text-xs font-mono">{scanResult.name} • Status: Entry Recorded</p>
-              </div>
-            </>
-          ) : (
-            <>
-              <AlertTriangle className="w-8 h-8 shrink-0" />
-              <div>
-                <p className="text-sm font-bold text-white">DUPLICATE ENTRY / INVALID PASS</p>
-                <p className="text-xs font-mono">This QR code was already scanned 4 minutes ago!</p>
-              </div>
-            </>
-          )}
+        {/* Live Gate Tally Metrics */}
+        <div className="grid grid-cols-2 gap-3 p-4 bg-white/5 border-b border-white/10 text-xs font-mono text-center">
+          <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+            <p className="text-[10px] text-emerald-400">TOTAL CHECKED-IN</p>
+            <p className="font-heading text-lg font-extrabold text-white mt-0.5">{totalScanned}</p>
+          </div>
+          <div className="p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-xl">
+            <p className="text-[10px] text-rose-400">DUPLICATES BLOCKED</p>
+            <p className="font-heading text-lg font-extrabold text-white mt-0.5">{duplicatesBlocked}</p>
+          </div>
         </div>
-      )}
 
-      {/* Live Check-in Log Table */}
-      <div className="space-y-3 pt-2">
-        <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <History className="w-4 h-4 text-[#6c63ff]" />
-          Realtime Attendance Log Stream
-        </h4>
+        {/* Camera Viewfinder Simulation */}
+        <div className="p-6 space-y-6">
+          
+          <div className="relative h-64 rounded-2xl bg-slate-950 border-2 border-dashed border-[#6c63ff]/60 overflow-hidden flex flex-col items-center justify-center p-4 text-center group">
+            
+            {/* Viewfinder Target Laser Line */}
+            <div className="absolute inset-x-6 top-1/2 h-0.5 bg-[#00E5A8] shadow-[0_0_15px_#00E5A8] animate-pulse"></div>
 
-        <div className="p-3 bg-[#0d0e12] border border-white/10 rounded-2xl space-y-2">
-          {scanLogs.map((log, idx) => (
-            <div key={idx} className="flex items-center justify-between text-xs font-mono py-1.5 px-3 bg-white/5 rounded-xl">
-              <span className="text-slate-400">{log.time}</span>
-              <span className="text-white font-bold">{log.code}</span>
-              <span className="text-[#00E5A8] font-bold">{log.status}</span>
+            <Camera className="w-10 h-10 text-slate-600 mb-2 group-hover:text-[#00E5A8] transition-colors" />
+            <p className="text-xs text-slate-300 font-mono">Camera Feed Active (Live 60 FPS)</p>
+            <p className="text-[10px] text-slate-500 font-mono mt-1">Scanning 30-Second Rolling TOTP Payload...</p>
+
+            {/* Quick Demo Trigger Buttons */}
+            <div className="absolute bottom-3 flex gap-2">
+              <button
+                onClick={handleSimulateScanSuccess}
+                className="px-3 py-1.5 bg-[#00E5A8] text-slate-950 font-bold text-[10px] rounded-xl font-mono hover:scale-105 transition-transform"
+              >
+                ⚡ Scan Valid Pass
+              </button>
+              <button
+                onClick={handleSimulateScanDuplicate}
+                className="px-3 py-1.5 bg-rose-500 text-white font-bold text-[10px] rounded-xl font-mono hover:scale-105 transition-transform"
+              >
+                ⚠️ Scan Duplicate
+              </button>
             </div>
-          ))}
-        </div>
-      </div>
 
+          </div>
+
+          {/* Scan Result Feedback Banner */}
+          <div className={`p-4 rounded-2xl border font-mono text-xs transition-all ${
+            scanResult.status === 'success' 
+              ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
+              : scanResult.status === 'duplicate'
+              ? 'bg-rose-500/10 border-rose-500/40 text-rose-300'
+              : 'bg-white/5 border-white/10 text-slate-300'
+          }`}>
+            <div className="flex items-start gap-3">
+              {scanResult.status === 'success' && <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />}
+              {scanResult.status === 'duplicate' && <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />}
+              {scanResult.status === 'idle' && <ShieldCheck className="w-5 h-5 text-[#6c63ff] shrink-0 mt-0.5" />}
+
+              <div className="space-y-1">
+                <p className="font-bold">{scanResult.message}</p>
+                {scanResult.attendeeName && (
+                  <p className="text-[11px] text-white">
+                    Student: <span className="font-bold text-[#00E5A8]">{scanResult.attendeeName}</span> ({scanResult.regNo}) • Scanned at {scanResult.timestamp}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Manual Registration Number Fallback Search */}
+          <form onSubmit={handleManualSubmit} className="space-y-2">
+            <label className="text-[11px] font-mono text-slate-400">Manual Student Reg No Lookup:</label>
+            <div className="flex gap-2 font-mono">
+              <input
+                type="text"
+                value={manualCode}
+                onChange={(e) => setManualCode(e.target.value)}
+                placeholder="e.g. 23BCE1092"
+                className="flex-1 px-3.5 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white uppercase focus:outline-none focus:border-[#6c63ff]"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 bg-[#6c63ff] text-white font-bold rounded-xl text-xs hover:bg-[#584ee4] transition-colors"
+              >
+                Check In
+              </button>
+            </div>
+          </form>
+
+        </div>
+
+      </div>
     </div>
   );
 };

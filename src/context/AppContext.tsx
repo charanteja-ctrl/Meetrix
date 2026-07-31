@@ -3,152 +3,159 @@ import type { EventItem, TicketBooking } from '../types/event';
 import { MOCK_EVENTS } from '../data/mockEvents';
 
 export type ViewTab = 
-  | 'home'
-  | 'explore'
-  | 'event-detail'
-  | 'dashboard'
-  | 'create-event'
-  | 'live-event'
+  | 'home' 
+  | 'explore' 
+  | 'event-detail' 
+  | 'create-event' 
+  | 'tickets' 
+  | 'dashboard' 
+  | 'scanner' 
+  | 'certificates' 
+  | 'networking' 
   | 'admin'
-  | 'networking'
-  | 'tickets'
-  | 'scanner'
-  | 'certificates'
-  | 'settings';
+  | 'od-certificates'
+  | 'approvals';
 
-export interface AppNotification {
+export interface NotificationItem {
   id: string;
   title: string;
   message: string;
-  timestamp: string;
+  time: string;
   read: boolean;
-  type: 'info' | 'success' | 'alert' | 'ticket';
+  type: 'info' | 'success' | 'warning' | 'error';
 }
 
 interface AppContextType {
-  events: EventItem[];
   activeView: ViewTab;
   setActiveView: (view: ViewTab) => void;
+  events: EventItem[];
   selectedEvent: EventItem | null;
   setSelectedEvent: (event: EventItem | null) => void;
   bookings: TicketBooking[];
   addBooking: (booking: TicketBooking) => void;
-  commandPaletteOpen: boolean;
-  setCommandPaletteOpen: (open: boolean) => void;
-  notifications: AppNotification[];
-  markNotificationAsRead: (id: string) => void;
-  addNotification: (title: string, message: string, type?: AppNotification['type']) => void;
-  notificationsDrawerOpen: boolean;
-  setNotificationsDrawerOpen: (open: boolean) => void;
-  addNewEvent: (newEvent: EventItem) => void;
+  updateBookingStatus: (id: string, status: TicketBooking['status']) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  notifications: NotificationItem[];
+  markNotificationAsRead: (id: string) => void;
+  commandPaletteOpen: boolean;
+  setCommandPaletteOpen: (open: boolean) => void;
+  scannerModalOpen: boolean;
+  setScannerModalOpen: (open: boolean) => void;
+  notificationsDrawerOpen: boolean;
+  setNotificationsDrawerOpen: (open: boolean) => void;
 }
 
 const INITIAL_BOOKINGS: TicketBooking[] = [
   {
-    id: 'tkt-8819',
-    eventId: 'evt-1',
-    eventTitle: 'Global Tech & AI Summit 2026',
-    eventDate: '2026-09-15',
-    eventLocation: 'Palace of Fine Arts & Tech Dome, SF',
-    eventBanner: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80',
-    tierName: 'VIP',
-    seatNumber: 'Seat A-4 (VIP Arena)',
+    id: 'tkt-vitopia-9901',
+    eventId: 'evt-vitopia-2026',
+    eventTitle: 'Vitopia 2026 — International Cultural & Sports Fest',
+    eventDate: '2026-09-24',
+    eventLocation: 'Open Air Theatre (OAT), VIT-AP',
+    eventBanner: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+    tierName: 'VIP Pro-Night Pass',
+    seatNumber: 'Row A (Seat A12)',
     quantity: 1,
     totalAmount: 799,
-    qrCodeValue: 'EVENTSPHERE-TKT-8819-VIP-A4-VALID',
-    purchasedAt: '2026-07-28 14:20',
+    qrCodeValue: 'VITAP:TKT:9901:Alex:23BCE1092',
+    purchasedAt: '2026-07-28T14:32:00Z',
     status: 'valid',
     attendeeName: 'Alex Rivera',
-    attendeeEmail: 'alex.rivera@eventsphere.io'
+    attendeeEmail: 'alex.rivera@vitap.ac.in'
+  },
+  {
+    id: 'tkt-vtapp-8802',
+    eventId: 'evt-vtapp-2026',
+    eventTitle: 'VTAPP 2026 — Annual National Tech Fest',
+    eventDate: '2026-10-14',
+    eventLocation: 'APJ Abdul Kalam Auditorium (AB1), VIT-AP',
+    eventBanner: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80',
+    tierName: 'Group Hacker Pass',
+    seatNumber: 'Multipurpose Hall (MPH Stage)',
+    quantity: 1,
+    totalAmount: 199,
+    qrCodeValue: 'VITAP:TKT:8802:Alex:23BCE1092',
+    purchasedAt: '2026-07-29T10:15:00Z',
+    status: 'valid',
+    attendeeName: 'Alex Rivera',
+    attendeeEmail: 'alex.rivera@vitap.ac.in'
   }
 ];
 
-const INITIAL_NOTIFICATIONS: AppNotification[] = [
+const INITIAL_NOTIFICATIONS: NotificationItem[] = [
   {
-    id: 'n-1',
-    title: 'VIP Ticket Confirmed!',
-    message: 'Your VIP pass for Global Tech & AI Summit 2026 is ready. QR code generated.',
-    timestamp: '10 mins ago',
-    read: false,
-    type: 'ticket'
-  },
-  {
-    id: 'n-2',
-    title: 'New Sponsor Onboarded',
-    message: 'Stripe Platinum Sponsorship signed for $50,000.',
-    timestamp: '1 hour ago',
+    id: 'notif-1',
+    title: '🎉 Vitopia 2026 Ticket Confirmed',
+    message: 'Your VIP Pro-Night Pass for OAT stage is ready in My Passes.',
+    time: '10m ago',
     read: false,
     type: 'success'
   },
   {
-    id: 'n-3',
-    title: 'Live Q&A Room Opened',
-    message: 'Elena Rostova is now taking live questions on Stage 1.',
-    timestamp: '2 hours ago',
-    read: true,
+    id: 'notif-2',
+    title: '📄 VTOP On-Duty Sheet Unlocked',
+    message: 'Attendance duration verified (>80%). Export your OD Sheet in Certificates view.',
+    time: '1h ago',
+    read: false,
     type: 'info'
+  },
+  {
+    id: 'notif-3',
+    title: '⚡ VTAPP 48h Hackathon Starting',
+    message: 'Multipurpose Hall (MPH) gate scanning opens at 09:00 AM tomorrow.',
+    time: '3h ago',
+    read: true,
+    type: 'warning'
   }
 ];
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [events, setEvents] = useState<EventItem[]>(MOCK_EVENTS);
   const [activeView, setActiveView] = useState<ViewTab>('home');
+  const [events] = useState<EventItem[]>(MOCK_EVENTS);
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(MOCK_EVENTS[0]);
   const [bookings, setBookings] = useState<TicketBooking[]>(INITIAL_BOOKINGS);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [notifications, setNotifications] = useState<NotificationItem[]>(INITIAL_NOTIFICATIONS);
+  
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const [notifications, setNotifications] = useState<AppNotification[]>(INITIAL_NOTIFICATIONS);
+  const [scannerModalOpen, setScannerModalOpen] = useState(false);
   const [notificationsDrawerOpen, setNotificationsDrawerOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
 
   const addBooking = (booking: TicketBooking) => {
     setBookings(prev => [booking, ...prev]);
-    addNotification('Ticket Purchased!', `Successfully booked ${booking.quantity} ticket for ${booking.eventTitle}.`, 'ticket');
   };
 
-  const addNotification = (title: string, message: string, type: AppNotification['type'] = 'info') => {
-    const newNotif: AppNotification = {
-      id: `n-${Date.now()}`,
-      title,
-      message,
-      timestamp: 'Just now',
-      read: false,
-      type
-    };
-    setNotifications(prev => [newNotif, ...prev]);
+  const updateBookingStatus = (id: string, status: TicketBooking['status']) => {
+    setBookings(prev => prev.map(b => b.id === id ? { ...b, status } : b));
   };
 
   const markNotificationAsRead = (id: string) => {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
   };
 
-  const addNewEvent = (newEvent: EventItem) => {
-    setEvents(prev => [newEvent, ...prev]);
-    addNotification('Event Created!', `"${newEvent.title}" has been published successfully.`, 'success');
-  };
-
   return (
     <AppContext.Provider value={{
-      events,
       activeView,
       setActiveView,
+      events,
       selectedEvent,
       setSelectedEvent,
       bookings,
       addBooking,
-      commandPaletteOpen,
-      setCommandPaletteOpen,
+      updateBookingStatus,
+      searchQuery,
+      setSearchQuery,
       notifications,
       markNotificationAsRead,
-      addNotification,
+      commandPaletteOpen,
+      setCommandPaletteOpen,
+      scannerModalOpen,
+      setScannerModalOpen,
       notificationsDrawerOpen,
-      setNotificationsDrawerOpen,
-      addNewEvent,
-      searchQuery,
-      setSearchQuery
+      setNotificationsDrawerOpen
     }}>
       {children}
     </AppContext.Provider>

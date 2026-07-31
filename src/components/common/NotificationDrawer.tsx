@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Bell, Ticket, CheckCircle2, Info, AlertTriangle } from 'lucide-react';
+import { X, Bell, CheckCircle2, Info, AlertTriangle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export const NotificationDrawer: React.FC = () => {
@@ -39,15 +39,15 @@ export const NotificationDrawer: React.FC = () => {
             >
               <div className="flex items-start gap-3">
                 <div className="p-2 rounded-xl bg-white/10 shrink-0 mt-0.5">
-                  {item.type === 'ticket' && <Ticket className="w-4 h-4 text-[#00E5A8]" />}
                   {item.type === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
-                  {item.type === 'alert' && <AlertTriangle className="w-4 h-4 text-[#FF5A76]" />}
+                  {item.type === 'warning' && <AlertTriangle className="w-4 h-4 text-amber-400" />}
+                  {item.type === 'error' && <AlertTriangle className="w-4 h-4 text-[#FF5A76]" />}
                   {item.type === 'info' && <Info className="w-4 h-4 text-cyan-400" />}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-semibold text-white">{item.title}</h4>
-                    <span className="text-[10px] text-slate-400 font-mono">{item.timestamp}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">{item.time}</span>
                   </div>
                   <p className="text-xs text-slate-300 mt-1 leading-relaxed">{item.message}</p>
                 </div>

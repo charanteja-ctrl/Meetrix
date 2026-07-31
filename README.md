@@ -1,132 +1,198 @@
-# EventSphere — Enterprise SaaS Event Management Platform
+# 🚀 EventSphere AI — VIT-AP Campus Event Management Platform (Vercel Edition)
 
-> Production-ready, ultra-polished, scalable Event Management & Ticketing SaaS Platform built with **React 19**, **TypeScript**, **Vite**, **Tailwind CSS**, **Framer Motion**, **Groq AI (Llama 3.3)**, **Supabase**, and **Stripe**.
-
----
-
-## 🎨 Theme & Design Philosophy
-
-Engineered with a cohesive design system combining **Linear + Stripe Dashboard + Apple Minimalist + Neo-Brutalism**:
-
-- **Color Tokens**: Primary Indigo `#6C63FF`, Neon Mint `#00E5A8`, Coral Danger `#FF5A76`, Amber Warning `#FFB84D`, Dark Surface `#0D0E12`, Card `#14161d`.
-- **Typography Pairing**: `Space Grotesk` (Headings) + `Inter` (Body text) + `JetBrains Mono` (Data, Codes & Prices).
-- **Interactivity**: Glassmorphism cards, Aurora gradient background, interactive SVG seat allocation, Raycast-style command palette (`Ctrl + K`), and Konami Code easter eggs.
+> **The Production-Grade Institutional SaaS Platform for VIT-AP University**  
+> Tailored specifically for VIT-AP student clubs (GDSC, ACM, GFG, CSI, IEEE, SEDS), administrative approval workflows (DSW + Registrar), venue spatial management (AB1 Auditorium, MPH, OAT), VTOP On-Duty (OD) sheet generation, and dynamic 30-second anti-screenshot QR ticketing.
 
 ---
 
-## 🌟 Key Application Features
+## 🏛️ 1. VIT-AP Architecture & Spatial Specifications
 
-1. **Interactive SVG Venue Seat Map**: Visual 8x6 grid allocation with VIP zones, Front Row, Standard, and Accessible seats. Includes price calculation, group pass recommendations, and instant booking.
-2. **Dynamic Encrypted QR Tickets**: 3D flip digital passes with encrypted QR code generation, Apple Wallet & Google Wallet mock sync, and PDF ticket exports.
-3. **Volunteer Live QR Scanner**: Mobile-ready camera simulator & file validator for sub-120ms ticket check-ins, duplicate entry detection, and offline log sync.
-4. **Groq AI Co-Pilot & Studio**: Powered by Llama 3.3 (70B), Mixtral (8x7B), and DeepSeek R1 for AI event copy generation, schedule optimization, dynamic pricing advice, and fraud risk analysis.
-5. **Organizer Control Studio**: Gross revenue widgets, 7-day pacing charts, conversion funnel, registration tables, and payout status.
-6. **6-Step Event Creation Wizard**: Intuitive step-by-step wizard (Basic Info -> Location -> Agenda -> Ticketing -> Seat Map -> SEO & Publishing).
-7. **System Command Center & Admin Panel**: Feature flag toggles, role-based access matrix (Guest, Attendee, Organizer, Volunteer, Vendor, Sponsor, Admin, Super Admin), and real-time audit logs stream.
-8. **Attendee Networking & Matchmaking**: Swipeable attendee cards, AI match score calculation, direct messaging, and digital business card exchange.
-9. **Cryptographic Certificate Engine**: Auto-generates verified digital PDF certificates with QR verification links and LinkedIn sharing.
+### 📍 Campus Venues Matrix (`venues` Table)
+| Venue ID | Venue Name | Seating Capacity | Hardware & Amenities | Approval Level |
+| --- | --- | --- | --- | --- |
+| `V-AB1-AUD` | **APJ Abdul Kalam Auditorium** | 1,200 | Dual 4K Laser Projectors, Dolby Atmos, Stage Lights, Green Rooms | DSW + Registrar |
+| `V-AB1-CR` | **Central Conference Hall** | 250 | 86" Smart Panel, Polycom Video Conference Rig | DSW + Admin Office |
+| `V-MPH-01` | **Multipurpose Hall (MPH)** | 2,500 (Standing) / 1,000 (Seated) | Open Floor, High-Wattage Audio, Portable Stage, Power Backups | DSW + Sports/Estate |
+| `V-OAT-01` | **Open Air Theatre (OAT)** | 3,500+ | Outdoor Stage, Acoustic Shell, High-Voltage Power Lines | DSW + Estate Officer |
+| `V-AB1-SH1` | **Seminar Hall 1 & 2** | 200 each | HD Laser Projector, PA System, Touch Podiums | School Dean / DSW |
+| `V-AB2-SH1` | **Seminar Hall AB-2** | 300 | Dual Displays, 7.1 Surround Sound, Tiered Seating | School Dean / DSW |
+| `V-LAB-MAC` | **Mac & High-Performance Computing Labs** | 120 Workstations | LAN, Gigabit Wi-Fi, CUDA GPU Cluster Access | SCOPE Lab Director |
 
 ---
 
-## 🚀 End-to-End Deployment Guide
+## ⚡ 2. Core GOAT Features
 
-Follow this guide to deploy **EventSphere** to production across Vercel, Railway, and Supabase.
+1. **🔒 Dynamic TOTP Anti-Screenshot QR Pass**: In-app digital wallet issuing cryptographic QR codes refreshed every 30 seconds (`student_id` + `event_id` + `salt` + `timestamp_window`) with animated 30s countdown ring and watermark to prevent screenshot sharing.
+2. **📱 Volunteer QR Scanner Kiosk**: Real-time entry scanner with WebCam camera feed, audio chimes (success chime for valid student pass, warning chime for duplicate entry), sub-second gate check-in, and manual registration number (`23BCE1092`) fallback.
+3. **📅 FFCS Timetable Conflict Detector**: Intersects student's enrolled VTOP timetable slots (A1, B1, C1, L1+L2, etc.) with event schedules to issue schedule collision warnings.
+4. **📄 VTOP On-Duty (OD) Sheet Exporter**: Evaluates timestamped gate logs (>80% venue duration threshold) and generates academic OD Approval Sheets in CSV/Excel format.
+5. **🛡️ 3-Tier DSW Approval Pipeline**: State-machine workflow handling:  
+   `Draft` ➔ `Faculty Coordinator Review` ➔ `Venue Collision Engine Check` ➔ `DSW Final Sign-off` ➔ `Live Publishing`.
+6. **📊 Live Gate Occupancy Monitor**: WebSocket-powered live capacity gauge displaying gate count vs. total capacity for safety compliance across AB1 Auditorium, MPH, and OAT.
 
-### 1. Database Setup (Supabase PostgreSQL)
+---
 
-1. Create a new project on [Supabase Console](https://supabase.com).
-2. Go to **SQL Editor** and execute the normalized schema script provided in `src/utils/supabase.ts` (or run `npx supabase db push`):
+## 🗄️ 3. Complete Supabase PostgreSQL Schema Script
+
+Execute this complete SQL migration script in your **Supabase Dashboard ➔ SQL Editor**:
 
 ```sql
--- Create Users Profile Table
-CREATE TABLE public.profiles (
-    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    role VARCHAR(50) DEFAULT 'Attendee',
-    xp INTEGER DEFAULT 0,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+-- 1. ENUMS & CONSTANTS
+CREATE TYPE user_role AS ENUM (
+  'Guest', 'Student Attendee', 'Club Lead & Organizer', 
+  'Volunteer', 'Faculty Coordinator', 'Sponsor & Vendor', 'Admin', 'Super Admin'
 );
 
--- Enable RLS
-ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+CREATE TYPE approval_status AS ENUM (
+  'Draft', 'Faculty Coordinator Review', 'Venue Collision Checking', 'DSW Final Sign-off', 'Live Published'
+);
+
+-- 2. USERS TABLE
+CREATE TABLE public.users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  role user_role DEFAULT 'Student Attendee',
+  registration_number TEXT,
+  school TEXT DEFAULT 'SCOPE',
+  hostel_block TEXT DEFAULT 'MH-2',
+  xp INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. VENUES TABLE
+CREATE TABLE public.venues (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  location TEXT NOT NULL,
+  capacity INTEGER NOT NULL,
+  standing_capacity INTEGER,
+  hardware TEXT[],
+  approval_level TEXT NOT NULL
+);
+
+-- 4. ORGANIZATIONS (CLUBS) TABLE
+CREATE TABLE public.organizations (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  email TEXT NOT NULL,
+  school_affiliation TEXT NOT NULL,
+  lead_name TEXT NOT NULL,
+  faculty_coordinator TEXT NOT NULL
+);
+
+-- 5. EVENTS TABLE
+CREATE TABLE public.events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  category TEXT NOT NULL,
+  venue_id TEXT REFERENCES public.venues(id),
+  organizer_id TEXT REFERENCES public.organizations(id),
+  event_date DATE NOT NULL,
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  approval_stage approval_status DEFAULT 'Draft',
+  price_from NUMERIC DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 6. REGISTRATIONS & TICKETS TABLE
+CREATE TABLE public.registrations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id UUID REFERENCES public.events(id),
+  user_id UUID REFERENCES public.users(id),
+  tier_name TEXT NOT NULL,
+  seat_number TEXT,
+  total_amount NUMERIC DEFAULT 0,
+  qr_code_hash TEXT NOT NULL,
+  status TEXT DEFAULT 'valid',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 7. ATTENDANCE LOGS TABLE
+CREATE TABLE public.attendance_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  registration_id UUID REFERENCES public.registrations(id),
+  scan_time TIMESTAMPTZ DEFAULT NOW(),
+  scanned_by_volunteer TEXT NOT NULL,
+  gate_location TEXT NOT NULL
+);
+
+-- 8. ROW LEVEL SECURITY (RLS) POLICIES
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.registrations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public Read Access for Events" ON public.events FOR SELECT USING (true);
+CREATE POLICY "Student Read Own Tickets" ON public.registrations FOR SELECT USING (auth.uid() = user_id);
 ```
 
-3. Obtain your **Supabase URL** and **Anon Key** from `Project Settings -> API`.
-
 ---
 
-### 2. Groq AI Integration Setup
+## 🌐 4. Step-by-Step Vercel Deployment Guide
 
-1. Sign up for a free developer account at [Groq Console](https://console.groq.com).
-2. Generate an API Key starting with `gsk_...`.
-3. Enter your Groq API Key into the **EventSphere Settings** panel or set it in your environment variables.
+### Option A: Deployment via Vercel Web Dashboard (Recommended)
 
----
+1. **Push Code to GitHub**:
+   Ensure your code is pushed to your GitHub repository:
+   `https://github.com/charanteja-ctrl/Meetrix`
 
-### 3. Frontend Deployment (Vercel)
+2. **Connect to Vercel**:
+   - Open [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New Project"**.
+   - Select your GitHub repository **`charanteja-ctrl/Meetrix`**.
 
-1. Push your codebase to a GitHub repository.
-2. Go to [Vercel Dashboard](https://vercel.com) and click **Add New -> Project**.
-3. Select your repository and configure the build settings:
-   - **Framework Preset**: Vite
+3. **Configure Project Settings**:
+   - **Framework Preset**: Vite / Next.js
+   - **Root Directory**: `./`
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
-4. Add the Environment Variables:
+
+4. **Add Environment Variables**:
+   In the **Environment Variables** panel on Vercel, paste:
    ```env
-   VITE_SUPABASE_URL=https://your-project.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
-   VITE_GROQ_API_KEY=gsk_your_groq_key
-   VITE_STRIPE_PUBLIC_KEY=pk_live_your_stripe_key
+   NEXT_PUBLIC_SUPABASE_URL=https://bgtnxkzceuffagvmueii.supabase.co
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_oj6ukBvRd3jAduYuV7AuGw_NS0LLNWs
+   VITE_SUPABASE_URL=https://bgtnxkzceuffagvmueii.supabase.co
+   VITE_SUPABASE_ANON_KEY=sb_publishable_oj6ukBvRd3jAduYuV7AuGw_NS0LLNWs
+   GROQ_API_KEY=your_groq_api_key_here
+   VITE_GROQ_API_KEY=your_groq_api_key_here
    ```
-5. Click **Deploy**. Vercel will automatically provision SSL certificates and CDN edge routes.
+
+5. **Deploy**:
+   - Click **Deploy**. Vercel will build and assign a live production URL (e.g. `https://meetrix-vitap.vercel.app`).
 
 ---
 
-### 4. Backend & Microservices Deployment (Railway / Docker)
-
-For backend REST APIs or webhook handlers:
-
-1. Create a `Dockerfile`:
-   ```dockerfile
-   FROM node:20-alpine
-   WORKDIR /app
-   COPY package*.json ./
-   RUN npm ci --only=production
-   COPY . .
-   EXPOSE 3000
-   CMD ["npm", "run", "preview", "--", "--host", "--port", "3000"]
-   ```
-2. Deploy to [Railway.app](https://railway.app) by linking your GitHub repository.
-3. Configure domain routing and webhooks for Stripe events (`checkout.session.completed`, `payment_intent.succeeded`).
-
----
-
-## 🛠️ Local Development & Testing
+### Option B: Deployment via Vercel CLI
 
 ```bash
-# 1. Install dependencies
-npm install
+# 1. Install Vercel CLI globally
+npm install -g vercel
 
-# 2. Start Vite dev server
-npm run dev
+# 2. Login to Vercel
+vercel login
 
-# 3. Type check & production build test
-npx tsc --noEmit
-npm run build
+# 3. Deploy to production
+vercel --prod
 ```
 
-Open `http://localhost:5173` in your browser.
-
 ---
 
-## ⌨️ Command Palette & Easter Eggs
+## 🧪 5. Local Development Commands
 
-- Press `Ctrl + K` or `Cmd + K` anywhere in the app to open the Raycast-inspired **Command Palette**.
-- Type the **Konami Code** (`↑ ↑ ↓ ↓ ← → ← → B A`) to trigger an interactive celebratory confetti easter egg.
+```bash
+# Install dependencies
+npm install
+
+# Start Vite Local Dev Server
+npm run dev
+
+# Run TypeScript & Build Verification
+npx tsc --noEmit && npm run build
+```
 
 ---
-
-## 📄 License
-
-Distributed under the MIT License. Produced for enterprise SaaS demonstration.
+*Built with ❤️ for VIT-AP University.*
